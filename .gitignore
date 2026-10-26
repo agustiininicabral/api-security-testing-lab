@@ -1,0 +1,16 @@
+__pycache__/
+.pytest_cache/
+.venv/
+.env
+.env.*
+!.env.example
+*.py[cod]
+*.pem
+*.key
+*.tmp
+*.temp
+tmp/
+temp/
+htmlcov/
+coverage.xml
+pytest-report.xml
