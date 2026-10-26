@@ -70,3 +70,8 @@ def test_unhandled_error_response_does_not_expose_exception_details() -> None:
     assert response.status_code == 500
     assert response.json() == {"detail": "Internal server error"}
     assert "sensitive internal detail" not in response.text
+
+def test_global_exception_handler_is_registered():
+    from app.main import app, safe_unhandled_error
+
+    assert app.exception_handlers.get(Exception) is safe_unhandled_error
