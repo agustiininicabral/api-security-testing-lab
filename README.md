@@ -78,7 +78,7 @@ network.
 
 ## Verified CI evidence
 
-- [GitHub Actions run — 27 October 2026](https://github.com/agustiininicabral/api-security-testing-lab/actions/runs/40450591526): **success**.
+- [GitHub Actions run — 27 October 2026](https://github.com/agustiininicabral/api-security-testing-lab/actions/runs/40451076624): **success**.
 - **30 tests passed**, with dependency consistency, Ruff formatting, and lint checks passing.
 - Pytest reported one Starlette/AnyIO deprecation warning; it does not fail the suite and remains a known cleanup item.
 - The JUnit XML report is uploaded as a workflow artifact and retained for 7 days.
