@@ -71,6 +71,13 @@ The tokens are hard-coded fictional lab values by design. Do not use this
 application as a production authentication system or expose it to an untrusted
 network.
 
+## Verified CI evidence
+
+- [GitHub Actions run — 27 October 2026](https://github.com/agustiininicabral/api-security-testing-lab/actions/runs/40450551639): **success**.
+- **30 tests passed**, with dependency consistency, Ruff formatting, and lint checks passing.
+- Pytest reported one Starlette/AnyIO deprecation warning; there were no test failures.
+- The JUnit XML report is uploaded as a workflow artifact and retained for 7 days.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
