@@ -148,3 +148,45 @@ def test_unhandled_error_response_does_not_expose_exception_details() -> None:
 
 def test_global_exception_handler_is_registered() -> None:
     assert app.exception_handlers.get(Exception) is safe_unhandled_error
+
+
+@pytest.mark.parametrize(
+    ("path", "authorization"),
+    [
+        ("/users/alice/profile", None),
+        ("/users/alice/profile", "Bearer invalid"),
+        ("/users/alice/profile", "Basic lab-user-token"),
+        ("/users/alice/profile", "Bearer"),
+        ("/users/alice/profile", "Bearer lab-user-token extra"),
+    ],
+    ids=[
+        "missing-credentials",
+        "unknown-token",
+        "wrong-scheme",
+        "missing-token",
+        "extra-token-data",
+    ],
+)
+def test_profile_endpoint_rejects_missing_or_malformed_credentials(
+    path: str,
+    authorization: str | None,
+) -> None:
+    headers = {"Authorization": authorization} if authorization is not None else {}
+
+    response = client.get(path, headers=headers)
+
+    assert response.status_code == 401
+    assert response.json() == {"detail": "Authentication required"}
+    assert response.headers["www-authenticate"] == "Bearer"
+
+
+def test_forbidden_profile_response_does_not_disclose_profile_data() -> None:
+    response = client.get(
+        "/users/admin/profile",
+        headers={"Authorization": "Bearer lab-user-token"},
+    )
+
+    assert response.status_code == 403
+    assert response.json() == {"detail": "Forbidden"}
+    assert "Local lab profile" not in response.text
+    assert "admin" not in response.text
