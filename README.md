@@ -1,45 +1,76 @@
 # API Security Testing Lab
 
+![API Security Tests](https://github.com/agustiininicabral/api-security-testing-lab/actions/workflows/tests.yml/badge.svg)
+
 A small, local-only FastAPI project for practicing automated API security tests.
-The sample tokens and profiles are fictional and intended only for this lab.
-The application does not make requests to external systems.
+The sample tokens and profiles are fictional, and the application makes no
+requests to external systems. This is a training lab, not production
+authentication or authorization code.
 
 ## Requirements
 
 - Python 3.12
-- Dependencies listed in `requirements.txt` (FastAPI, HTTPX, Pytest, and Uvicorn)
+- Runtime dependencies are pinned in `requirements.txt`
+- Development and test tooling is pinned in `requirements-dev.txt`
 
-Install dependencies in a virtual environment when needed:
+## Install (Windows PowerShell)
+
+Create a virtual environment and install the development dependencies:
 
 ```powershell
 py -3.12 -m venv .venv
-.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
 ```
+
+The development requirements include the runtime requirements and Ruff. To
+install only what is needed to run the API, use `requirements.txt` instead.
 
 ## Run locally
 
 Start the API on the loopback interface:
 
 ```powershell
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Uvicorn serves the app on loopback for local manual exploration. The sample endpoints are `/health`,
-`/protected`, `/users/{username}/profile`, and `/items?limit=10`.
+The sample endpoints are `/health`, `/protected`,
+`/users/{username}/profile`, and `/items?limit=10`.
 
-## Run security tests
+## Run tests and quality checks
+
+Run the complete test suite and generate a JUnit report:
 
 ```powershell
-python -m pytest
+.\.venv\Scripts\python.exe -m pytest -v --junitxml=pytest-report.xml
 ```
 
-The tests cover missing and invalid authentication, a valid lab identity,
-role and ownership authorization, query input validation, and generic handling
-of unhandled exceptions. HTTPX is required by FastAPI's `TestClient`.
+Check formatting, lint rules, and dependency consistency:
 
-## Next steps
+```powershell
+.\.venv\Scripts\ruff.exe format --check app tests
+.\.venv\Scripts\ruff.exe check app tests
+.\.venv\Scripts\python.exe -m pip check
+```
 
-- Add additional authorization and malformed-input cases as the lab grows.
-- Add a machine-readable test report and a GitHub Actions workflow in a later
-  stage.
+The generated test report is excluded from version control. GitHub Actions runs
+these checks on pushes and pull requests, then uploads the JUnit report as a
+short-lived artifact.
+
+## Security scenarios covered
+
+- Missing, invalid, and malformed bearer credentials.
+- Case-insensitive bearer scheme handling.
+- User and administrator roles.
+- Ownership-based profile access and forbidden cross-user access.
+- Missing authentication on protected profile routes.
+- Query parameter validation, including lower and upper bounds.
+- Generic HTTP 500 responses that do not expose internal exception details.
+- Registration of the generic exception handler.
+
+The tokens are hard-coded fictional lab values by design. Do not use this
+application as a production authentication system or expose it to an untrusted
+network.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
