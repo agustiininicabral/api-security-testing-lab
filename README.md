@@ -1,5 +1,7 @@
 # API Security Testing Lab
 
+![API Security Tests](https://github.com/agustiininicabral/api-security-testing-lab/actions/workflows/tests.yml/badge.svg)
+
 A small, local-only FastAPI project for practicing automated API security tests.
 The sample tokens and profiles are fictional, and the application makes no
 requests to external systems. This is a training lab, not production
