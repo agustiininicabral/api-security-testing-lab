@@ -10,20 +10,25 @@ authentication or authorization code.
 ## Requirements
 
 - Python 3.12
-- Runtime dependencies are pinned in `requirements.txt`
-- Development and test tooling is pinned in `requirements-dev.txt`
+- Runtime dependencies are declared in `requirements.txt`
+- Test and development dependencies are declared in `requirements-dev.txt`
+- `requirements-lock.txt` pins the resolved dependency versions, including transitives
 
 ## Install (Windows PowerShell)
 
-Create a virtual environment and install the development dependencies:
+Create a virtual environment and install the development dependencies with the
+version constraints:
 
 ```powershell
 py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt -c requirements-lock.txt
 ```
 
-The development requirements include the runtime requirements and Ruff. To
-install only what is needed to run the API, use `requirements.txt` instead.
+To install only the API runtime:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt -c requirements-lock.txt
+```
 
 ## Run locally
 
@@ -73,9 +78,9 @@ network.
 
 ## Verified CI evidence
 
-- [GitHub Actions run — 27 October 2026](https://github.com/agustiininicabral/api-security-testing-lab/actions/runs/40450551639): **success**.
+- [GitHub Actions run — 27 October 2026](https://github.com/agustiininicabral/api-security-testing-lab/actions/runs/40450591526): **success**.
 - **30 tests passed**, with dependency consistency, Ruff formatting, and lint checks passing.
-- Pytest reported one Starlette/AnyIO deprecation warning; there were no test failures.
+- Pytest reported one Starlette/AnyIO deprecation warning; it does not fail the suite and remains a known cleanup item.
 - The JUnit XML report is uploaded as a workflow artifact and retained for 7 days.
 
 ## License
